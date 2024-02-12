@@ -140,8 +140,8 @@ class User(db.Model):
         hashed_pwd = bcrypt.generate_password_hash(password).decode('UTF-8')
 
         user = User(
-            username=username,
-            email=email,
+            username=username.lower(),
+            email=email.lower(),
             password=hashed_pwd,
             image_url=image_url,
         )

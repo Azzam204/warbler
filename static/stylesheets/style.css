@@ -102,6 +102,9 @@ nav form.navbar-form {
   box-shadow: none;
   border: 2px solid #007bff;
 }
+.nav-pills {
+  padding-left: 50px;
+}
 
 /* on "onboarding" pages (signup & login), the navbar is
    different: no search box, the logo is centered, and it has
@@ -197,11 +200,24 @@ nav + .container {
 }
 
 #warbler-hero {
-  height: 360px;
+  max-height: 360px;
   margin-top: -16px;
   opacity: 0.7;
+  /* position: relative; */
+  overflow: hidden;
   background-size: cover;
-  background-position: top center;
+  background-position: center;
+}
+
+#probtn {
+  margin-left: 5px;
+}
+
+
+#warbler-hero img {
+  width: 100vw;
+  vertical-align: middle;
+  object-fit: contain;
 }
 
 .full-width {
@@ -291,6 +307,11 @@ nav + .container {
   word-wrap: break-word;
 }
 
+#sidebar-username a {
+  text-decoration: none;
+  color: black;
+}
+
 @media (max-width: 768px) {
   .full-width .user-stats .stat {
     display: none;
@@ -300,6 +321,7 @@ nav + .container {
 .user-location {
   color: #657786;
 }
+
 
 /* ==================== User cards on follower/following pages */
 

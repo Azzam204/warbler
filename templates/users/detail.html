@@ -2,7 +2,9 @@
 
 {% block content %}
 
-<div id="warbler-hero" class="full-width"></div>
+<div id="warbler-hero" class="full-width">
+  <img src="{{ user.header_image_url }}" alt="Header image for {{ user.username }}" onerror="this.src='/static/images/warbler-hero.jpg'">
+</div>
 <img src="{{ user.image_url }}" alt="Image for {{ user.username }}" id="profile-avatar">
 <div class="row full-width">
   <div class="container">
@@ -29,13 +31,15 @@
           </li>
           <li class="stat">
             <p class="small">Likes</p>
-            <h4>TBD</h4>
+            <h4>
+              <a href="/users/{{ user.id }}/likes">{{ user.likes | length }}</a>              
+            </h4>
           </li>
           <div class="ml-auto">
             {% if g.user.id == user.id %}
-            <a href="/users/profile" class="btn btn-outline-secondary">Edit Profile</a>
+            <a href="/users/profile" id="probtn" class="btn btn-outline-secondary">Edit Profile</a>
             <form method="POST" action="/users/delete" class="form-inline">
-              <button class="btn btn-outline-danger ml-2">Delete Profile</button>
+              <button id="probtn" class="btn btn-outline-danger ml-2">Delete Profile</button>
             </form>
             {% elif g.user %}
             {% if g.user.is_following(user) %}
@@ -57,9 +61,11 @@
 
 <div class="row">
   <div class="col-sm-3">
-    <h4 id="sidebar-username">@{{ user.username }}</h4>
-    <p>BIO HERE</p>
-    <p class="user-location"><span class="fa fa-map-marker"></span>LOCATION HERE</p>
+    <h4 id="sidebar-username">
+      <a href="/users/{{user.id}}">@{{ user.username }}</a>
+    </h4>
+    <p>{{ user.bio }}</p>
+    <p class="user-location"><span class="fa fa-map-marker"></span>{{ user.location }}</p>
   </div>
 
   {% block user_details %}
