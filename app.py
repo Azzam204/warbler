@@ -98,7 +98,7 @@ def login():
     form = LoginForm()
 
     if form.validate_on_submit():
-        user = User.authenticate(form.username.data,
+        user = User.authenticate(form.username.data.lower(),
                                  form.password.data)
 
         if user:
@@ -135,7 +135,7 @@ def list_users():
     if not search:
         users = User.query.all()
     else:
-        users = User.query.filter(User.username.like(f"%{search}%")).all()
+        users = User.query.filter(User.username.like(f"%{search.lower()}%")).all()
 
     return render_template('users/index.html', users=users)
 
@@ -355,18 +355,30 @@ def homepage():
     - anon users: no messages
     - logged in: 100 most recent messages of followed_users
     """
-
     if g.user:
-        messages = (Message
-                    .query
-                    .filter(Message.user_id.in_(user.id for user in g.user.following + [g.user]))
-                    .order_by(Message.timestamp.desc())
-                    .limit(100)
-                    .all())
         
-        likes = [ like.id for like in g.user.likes]
+        if len(g.user.following) < 4 :
+            messages = (Message
+                        .query
+                        .order_by(Message.timestamp.desc())
+                        .limit(100)
+                        .all())
+            
+            likes = [ like.id for like in g.user.likes]
 
-        return render_template('home.html', messages=messages, likes=likes)
+            return render_template('home.html', messages=messages, likes=likes)
+        
+        else:
+            messages = (Message
+                        .query
+                        .filter(Message.user_id.in_(user.id for user in g.user.following + [g.user]))
+                        .order_by(Message.timestamp.desc())
+                        .limit(100)
+                        .all())
+            
+            likes = [ like.id for like in g.user.likes]
+
+            return render_template('home.html', messages=messages, likes=likes)
 
     else:
         return render_template('home-anon.html')
