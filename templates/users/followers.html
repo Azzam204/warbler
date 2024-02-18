@@ -10,7 +10,7 @@
           <div class="card user-card">
             <div class="card-inner">
               <div class="image-wrapper">
-                <img src="{{ follower.header_image_url }}" alt="" class="card-hero">
+                <img src="{{ follower.header_image_url }}" alt="" onerror="this.src='/static/images/warbler-hero.jpg'" class="card-hero">
               </div>
               <div class="card-contents">
                 <a href="/users/{{ follower.id }}" class="card-link">

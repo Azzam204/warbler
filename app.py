@@ -197,6 +197,8 @@ def show_likes(user_id):
     
     likes = [ like.id for like in g.user.likes]
 
+    session['stored_path'] = request.path
+
     return render_template('users/likes.html', user=user, messages=messages, likes=likes )
 
 
@@ -250,6 +252,7 @@ def profile():
             user.image_url = form.image_url.data
             user.header_image_url = form.header_image_url.data
             user.bio = form.bio.data
+            user.location = form.location.data
             db.session.commit()
             add_user_to_g()
             flash('Profile succesfully updated', 'success')
@@ -285,13 +288,13 @@ def handle_like(msg_id):
         if msg_id in [msg.id for msg in g.user.likes]:
             Likes.query.filter_by(message_id = msg_id).delete()
             db.session.commit()
-            return redirect('/')
+            return redirect(session['stored_path'])
     
         new_like = Likes(user_id = g.user.id, message_id = msg_id)
         db.session.add(new_like)
         db.session.commit()
 
-    return redirect('/')
+    return redirect(session['stored_path'])
 
 
 
@@ -316,6 +319,7 @@ def messages_add():
         g.user.messages.append(msg)
         db.session.commit()
 
+        flash('Message created!', 'success')
         return redirect(f"/users/{g.user.id}")
 
     return render_template('messages/new.html', form=form)
@@ -340,7 +344,8 @@ def messages_destroy(message_id):
     msg = Message.query.get(message_id)
     db.session.delete(msg)
     db.session.commit()
-
+    add_user_to_g()
+    flash('Message deleted', 'info')
     return redirect(f"/users/{g.user.id}")
 
 
@@ -356,6 +361,8 @@ def homepage():
     - logged in: 100 most recent messages of followed_users
     """
     if g.user:
+
+        session['stored_path'] = request.path
         
         if len(g.user.following) < 4 :
             messages = (Message
